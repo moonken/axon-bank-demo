@@ -6,20 +6,22 @@ import javax.persistence.Id;
 
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateRoot;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import com.example.axonbank.account.OverdraftLimitExceededException;
+import com.example.axonbank.account.application.api.command.CreateAccountCommand;
 import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
 import com.example.axonbank.account.event.AccountCreatedEvent;
-import com.example.axonbank.account.application.api.command.CreateAccountCommand;
-import com.example.axonbank.support.Loggable;
 import com.example.axonbank.account.event.MoneyWithdrawnEvent;
+import com.example.axonbank.support.Loggable;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Aggregate(snapshotTriggerDefinition = "snapshotTriggerDefinition")
+@AggregateRoot
 public class Account {
     @AggregateIdentifier
     @Id
