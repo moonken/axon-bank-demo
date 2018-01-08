@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.axonbank.AxonBankApplication;
-import com.example.axonbank.account.application.api.command.WithdrowMoneyCommand;
+import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
 
 @RestController
-@RequestMapping(value = "account")
+@RequestMapping(value = "/api/account")
 public class AccountActionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AxonBankApplication.class);
     private final CommandBus commandBus;
@@ -32,15 +32,15 @@ public class AccountActionController {
     @RequestMapping(method = RequestMethod.POST, value = "{id}/action/withdraw-money")
     public ResponseEntity withdrowMoney(@PathVariable String id, @RequestBody WithdrowMoneyApi drowMoney) {
         Long startTime = System.currentTimeMillis();
-        commandBus.dispatch(asCommandMessage(new WithdrowMoneyCommand(id, drowMoney.getAmount())), new CommandCallback<Object, Object>() {
+        commandBus.dispatch(asCommandMessage(new WithdrawMoneyCommand(id, drowMoney.getAmount())), new CommandCallback<Object, Object>() {
             @Override
             public void onSuccess(CommandMessage<?> commandMessage, Object o) {
-                LOGGER.info("WithdrowMoneyCommand TIME: {}", System.currentTimeMillis() - startTime);
+                LOGGER.info("WithdrawMoneyCommand TIME: {}", System.currentTimeMillis() - startTime);
             }
 
             @Override
             public void onFailure(CommandMessage<?> commandMessage, Throwable throwable) {
-                LOGGER.error("WithdrowMoneyCommand TIME: {}", System.currentTimeMillis() - startTime, throwable);
+                LOGGER.error("WithdrawMoneyCommand TIME: {}", System.currentTimeMillis() - startTime, throwable);
             }
         });
         return ResponseEntity.ok().build();

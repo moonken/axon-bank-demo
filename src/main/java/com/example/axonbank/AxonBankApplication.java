@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.example.axonbank.account.application.api.command.CreateAccountCommand;
-import com.example.axonbank.account.application.api.command.WithdrowMoneyCommand;
+import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -29,13 +29,12 @@ public class AxonBankApplication {
         commandBus.dispatch(asCommandMessage(new CreateAccountCommand("4321", Integer.MAX_VALUE)), new CommandCallback<Object, Object>() {
             @Override
             public void onSuccess(CommandMessage<?> commandMessage, Object o) {
-                commandBus.dispatch(asCommandMessage(new WithdrowMoneyCommand("4321", 500)));
+                commandBus.dispatch(asCommandMessage(new WithdrawMoneyCommand("4321", 500)));
             }
 
             @Override
             public void onFailure(CommandMessage<?> commandMessage, Throwable throwable) {
                 LOGGER.error("CreateAccountCommand");
-
             }
         });
     }

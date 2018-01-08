@@ -5,13 +5,13 @@ import org.axonframework.commandhandling.TargetAggregateIdentifier;
 import lombok.Getter;
 
 @Getter
-public class WithdrowMoneyCommand {
+public class WithdrawMoneyCommand {
     @TargetAggregateIdentifier
     private final String accountId;
-    private final int ammount;
+    private final int amount;
 
-    public WithdrowMoneyCommand(String accountId, int ammount) {
+    public WithdrawMoneyCommand(String accountId, int amount) {
         this.accountId = accountId;
-        this.ammount = ammount;
+        this.amount = amount;
     }
 }

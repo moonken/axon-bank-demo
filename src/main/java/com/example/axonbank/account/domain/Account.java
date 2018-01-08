@@ -10,11 +10,11 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import com.example.axonbank.account.OverdraftLimitExceededException;
+import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
 import com.example.axonbank.account.event.AccountCreatedEvent;
 import com.example.axonbank.account.application.api.command.CreateAccountCommand;
 import com.example.axonbank.support.Loggable;
 import com.example.axonbank.account.event.MoneyWithdrawnEvent;
-import com.example.axonbank.account.application.api.command.WithdrowMoneyCommand;
 
 import lombok.NoArgsConstructor;
 
@@ -30,14 +30,13 @@ public class Account {
 
     @CommandHandler
     public Account(CreateAccountCommand command) {
-
         apply(new AccountCreatedEvent(command.getAccountId(), command.getOverdraftLimit()));
     }
     @CommandHandler
     @Loggable
-    public void handle(WithdrowMoneyCommand command) throws OverdraftLimitExceededException {
-        if(balance + overdraftLimit >= command.getAmmount()){
-            apply(new MoneyWithdrawnEvent(accountId, command.getAmmount(), balance - command.getAmmount()));
+    public void handle(WithdrawMoneyCommand command) throws OverdraftLimitExceededException {
+        if(balance + overdraftLimit >= command.getAmount()){
+            apply(new MoneyWithdrawnEvent(accountId, command.getAmount(), balance - command.getAmount()));
         }else {
             throw new OverdraftLimitExceededException();
         }
