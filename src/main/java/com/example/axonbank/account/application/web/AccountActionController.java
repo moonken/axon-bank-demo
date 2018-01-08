@@ -2,6 +2,8 @@ package com.example.axonbank.account.application.web;
 
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 
+import java.util.UUID;
+
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.axonbank.AxonBankApplication;
+import com.example.axonbank.account.application.api.command.CreateAccountCommand;
 import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
 
 @RestController
@@ -44,6 +47,23 @@ public class AccountActionController {
             }
         });
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/action/create")
+    public ResponseEntity create() {
+        Long startTime = System.currentTimeMillis();
+        commandBus.dispatch(asCommandMessage(new CreateAccountCommand(UUID.randomUUID().toString(), 1000)), new CommandCallback<CreateAccountCommand, Object >() {
+            @Override
+            public void onSuccess(CommandMessage<? extends CreateAccountCommand> commandMessage, Object o) {
+                LOGGER.info("CreateAccountCommand TIME: {}", System.currentTimeMillis() - startTime);
+            }
+
+            @Override
+            public void onFailure(CommandMessage<? extends CreateAccountCommand> commandMessage, Throwable throwable) {
+                LOGGER.error("CreateAccountCommand TIME: {}", System.currentTimeMillis() - startTime, throwable);
+            }
+        });
+        return ResponseEntity.accepted().build();
     }
 
 
