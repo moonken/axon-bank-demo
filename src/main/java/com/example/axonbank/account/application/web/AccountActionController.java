@@ -32,17 +32,19 @@ public class AccountActionController {
     @RequestMapping(method = RequestMethod.POST, value = "{id}/action/withdraw-money")
     public ResponseEntity withdrowMoney(@PathVariable String id, @RequestBody WithdrowMoneyApi drowMoney) {
         Long startTime = System.currentTimeMillis();
-        commandBus.dispatch(asCommandMessage(new WithdrawMoneyCommand(id, drowMoney.getAmount())), new CommandCallback<Object, Object>() {
+        commandBus.dispatch(asCommandMessage(new WithdrawMoneyCommand(id, drowMoney.getAmount())), new CommandCallback<WithdrawMoneyCommand, Object >() {
             @Override
-            public void onSuccess(CommandMessage<?> commandMessage, Object o) {
+            public void onSuccess(CommandMessage<? extends WithdrawMoneyCommand> commandMessage, Object o) {
                 LOGGER.info("WithdrawMoneyCommand TIME: {}", System.currentTimeMillis() - startTime);
             }
 
             @Override
-            public void onFailure(CommandMessage<?> commandMessage, Throwable throwable) {
+            public void onFailure(CommandMessage<? extends WithdrawMoneyCommand> commandMessage, Throwable throwable) {
                 LOGGER.error("WithdrawMoneyCommand TIME: {}", System.currentTimeMillis() - startTime, throwable);
             }
         });
         return ResponseEntity.ok().build();
     }
+
+
 }
