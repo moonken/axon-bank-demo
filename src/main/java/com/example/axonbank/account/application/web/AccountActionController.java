@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +26,13 @@ import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand
 @RequestMapping(value = "/api/account")
 public class AccountActionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AxonBankApplication.class);
-    private final CommandBus commandBus;
+    private CommandBus commandBus;
+    private SimpMessageSendingOperations messagingTemplate;
 
     @Autowired
-    public AccountActionController(CommandBus commandBus) {
+    public AccountActionController(CommandBus commandBus, SimpMessageSendingOperations messagingTemplate) {
         this.commandBus = commandBus;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "{id}/action/withdraw-money")
@@ -39,6 +42,7 @@ public class AccountActionController {
             @Override
             public void onSuccess(CommandMessage<? extends WithdrawMoneyCommand> commandMessage, Object o) {
                 LOGGER.info("WithdrawMoneyCommand TIME: {}", System.currentTimeMillis() - startTime);
+                messagingTemplate.convertAndSend("/queue/status", new DefaultWebSocketUserMessage("Success"));
             }
 
             @Override
@@ -56,6 +60,7 @@ public class AccountActionController {
             @Override
             public void onSuccess(CommandMessage<? extends CreateAccountCommand> commandMessage, Object o) {
                 LOGGER.info("CreateAccountCommand TIME: {}", System.currentTimeMillis() - startTime);
+                messagingTemplate.convertAndSendToUser("admin","/status", new DefaultWebSocketUserMessage("Success"));
             }
 
             @Override

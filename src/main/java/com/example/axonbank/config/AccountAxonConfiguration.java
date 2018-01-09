@@ -1,5 +1,6 @@
 package com.example.axonbank.config;
 
+import org.axonframework.commandhandling.AsynchronousCommandBus;
 import org.axonframework.common.transaction.TransactionManager;
 import org.axonframework.eventsourcing.AbstractAggregateFactory;
 import org.axonframework.eventsourcing.AggregateFactory;
@@ -30,6 +31,11 @@ public class AccountAxonConfiguration {
     }
 
     @Bean
+    public AsynchronousCommandBus asynchronousCommandBus() {
+        return new AsynchronousCommandBus();
+    }
+
+    @Bean
     public TransactionManager axonTransactionManager(PlatformTransactionManager platformTransactionManager) {
         return new SpringTransactionManager(platformTransactionManager);
     }
@@ -40,7 +46,7 @@ public class AccountAxonConfiguration {
     }
 
     @Bean
-    public AbstractAggregateFactory<Account> springPrototypeAggregateFactory(){
+    public AbstractAggregateFactory<Account> springPrototypeAggregateFactory() {
         return new GenericAggregateFactory<>(Account.class);
     }
 

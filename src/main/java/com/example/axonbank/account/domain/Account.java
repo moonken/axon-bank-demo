@@ -31,8 +31,9 @@ public class Account {
 
 
     @CommandHandler
-    public Account(CreateAccountCommand command) {
+    public Account(CreateAccountCommand command) throws InterruptedException {
         apply(new AccountCreatedEvent(command.getAccountId(), command.getOverdraftLimit()));
+        Thread.sleep(10000);
     }
     @CommandHandler
     @Loggable
