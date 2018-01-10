@@ -13,6 +13,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 import com.example.axonbank.account.OverdraftLimitExceededException;
 import com.example.axonbank.account.application.api.command.CreateAccountCommand;
 import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
+import com.example.axonbank.account.application.api.command.WithdrawMoneyConflictDetectionCommand;
 import com.example.axonbank.account.event.AccountCreatedEvent;
 import com.example.axonbank.account.event.MoneyWithdrawnEvent;
 import com.example.axonbank.support.Loggable;
@@ -43,6 +44,10 @@ public class Account {
         }else {
             throw new OverdraftLimitExceededException();
         }
+    }
+    @CommandHandler
+    public void handle(WithdrawMoneyConflictDetectionCommand command) throws OverdraftLimitExceededException {
+        handle(((WithdrawMoneyCommand) command));
     }
 
     @EventSourcingHandler
