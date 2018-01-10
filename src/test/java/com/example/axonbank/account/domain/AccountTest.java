@@ -28,19 +28,20 @@ public class AccountTest {
     }
 
     @Test
-    public void testWidhtdrawReasonableAmmount() {
+    public void testWithdrawReasonableAmount() {
         fixture.given(new AccountCreatedEvent(ACCOUNT_ID, 1000))
                 .when(new WithdrawMoneyCommand(ACCOUNT_ID, 600))
                 .expectEvents(new MoneyWithdrawnEvent(ACCOUNT_ID, 600, -600));
     }
+
     @Test
-    public void testWidhtdrawReasonableAmmountFullLimit() {
+    public void testWithdrawReasonableAmountFullLimit() {
         fixture.given(new AccountCreatedEvent(ACCOUNT_ID, 1000))
                 .when(new WithdrawMoneyCommand(ACCOUNT_ID, 1000))
                 .expectEvents(new MoneyWithdrawnEvent(ACCOUNT_ID, 1000, -1000));
     }
     @Test
-    public void testWidhtdrawAbsurdAmmount() {
+    public void testWithdrawAbsurdAmount() {
         fixture.given(new AccountCreatedEvent(ACCOUNT_ID, 1000))
                 .when(new WithdrawMoneyCommand(ACCOUNT_ID, 1001))
                 .expectException(OverdraftLimitExceededException.class)
