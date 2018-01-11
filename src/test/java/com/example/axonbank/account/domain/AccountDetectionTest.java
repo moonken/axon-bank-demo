@@ -8,6 +8,7 @@ import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageE
 import org.junit.Before;
 import org.junit.Test;
 
+import com.example.axonbank.account.application.api.command.ChangeNrbConflictDetectionCommand;
 import com.example.axonbank.account.application.api.command.CreateAccountCommand;
 import com.example.axonbank.account.application.api.command.WithdrawMoneyCommand;
 import com.example.axonbank.account.application.api.command.WithdrawMoneyConflictDetectionCommand;
@@ -30,6 +31,21 @@ public class AccountDetectionTest {
         commandGateway.sendAndWait(new CreateAccountCommand("1234", 100));
         commandGateway.sendAndWait(new WithdrawMoneyCommand("1234", 1));
         commandGateway.sendAndWait(new WithdrawMoneyConflictDetectionCommand("1234", 1, 0L));
+    }
+
+    @Test
+    public void testNrbConflictResolverWhenIsFirstChangeNrbNumberOrChangeAgainSame() {
+        commandGateway.sendAndWait(new CreateAccountCommand("1234", 100));
+        commandGateway.sendAndWait(new WithdrawMoneyCommand("1234", 1));
+        commandGateway.sendAndWait(new ChangeNrbConflictDetectionCommand("1234", 0L, "15215121"));
+        commandGateway.sendAndWait(new ChangeNrbConflictDetectionCommand("1234", 0L, "15215121"));
+    }
+
+    @Test(expected = ConflictingAggregateVersionException.class)
+    public void testNrbConflictResolverCausesException() {
+        commandGateway.sendAndWait(new CreateAccountCommand("1234", 100));
+        commandGateway.sendAndWait(new ChangeNrbConflictDetectionCommand("1234", 0L, "15215121"));
+        commandGateway.sendAndWait(new ChangeNrbConflictDetectionCommand("1234", 0L, "15215122"));
     }
 
     @Test
