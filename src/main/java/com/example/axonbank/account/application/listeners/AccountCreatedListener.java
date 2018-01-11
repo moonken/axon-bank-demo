@@ -18,10 +18,11 @@ public class AccountCreatedListener {
 
     @EventHandler
     @Transactional
-    public void heandle(AccountCreatedEvent accountCreatedEvent) {
+    public void handle(AccountCreatedEvent accountCreatedEvent) throws InterruptedException {
         Account account = new Account();
         account.setNrb("245760939335884567789791999440");
         account.setId(accountCreatedEvent.getAccountId());
         accountRepository.save(account);
+        Thread.sleep(10000);
     }
 }
