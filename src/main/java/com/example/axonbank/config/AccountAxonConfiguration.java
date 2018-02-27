@@ -1,13 +1,10 @@
 package com.example.axonbank.config;
 
+import com.example.axonbank.account.domain.Account;
+import com.mongodb.MongoClient;
 import org.axonframework.commandhandling.AsynchronousCommandBus;
 import org.axonframework.common.transaction.TransactionManager;
-import org.axonframework.eventsourcing.AbstractAggregateFactory;
-import org.axonframework.eventsourcing.AggregateFactory;
-import org.axonframework.eventsourcing.AggregateSnapshotter;
-import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.GenericAggregateFactory;
-import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.*;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
 import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.EventStore;
@@ -18,9 +15,6 @@ import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import com.example.axonbank.account.domain.Account;
-import com.mongodb.MongoClient;
 
 @Configuration
 @EnableAxon
@@ -46,7 +40,7 @@ public class AccountAxonConfiguration {
     }
 
     @Bean
-    public AbstractAggregateFactory<Account> springPrototypeAggregateFactory() {
+    public AbstractAggregateFactory<Account> accountAggregateFactory() {
         return new GenericAggregateFactory<>(Account.class);
     }
 
