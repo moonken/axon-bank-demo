@@ -4,6 +4,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
 import java.util.Objects;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.axonframework.commandhandling.CommandHandler;
@@ -26,11 +27,13 @@ import com.example.axonbank.support.Loggable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @NoArgsConstructor
-@Aggregate(snapshotTriggerDefinition = "snapshotTriggerDefinition")
+@Aggregate(repository = "accountRepository")
 @AggregateRoot
 @Getter
+@Entity
 public class Account {
     @AggregateIdentifier
     @Id
@@ -81,6 +84,7 @@ public class Account {
     }
 
     @EventSourcingHandler
+    @Transactional
     public void on(MoneyWithdrawnEvent event) {
         balance = event.getBalance();
     }

@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.example.axonbank.account.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.axonbank.account.intrastructure.Account;
-import com.example.axonbank.account.intrastructure.AccountRepository;
+import com.example.axonbank.account.intrastructure.AccountJpaRepository;
 
 @Service
 public class AccountService {
-    private AccountRepository accountRepository;
+    private AccountJpaRepository accountRepository;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountJpaRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
@@ -27,8 +27,8 @@ public class AccountService {
 
     private AccountDto map(Account source) {
         AccountDto accountDto = new AccountDto();
-        accountDto.setId(source.getId());
-        accountDto.setNrb(source.getNrb());
+        accountDto.setId(source.getAccountId());
+        accountDto.setNrb(source.getNrbNumber());
         return accountDto;
     }
 }

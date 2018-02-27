@@ -13,10 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.example.axonbank.account.application.api.command.CreateAccountCommand;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableAutoConfiguration
-
 public class AxonBankApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(AxonBankApplication.class);
 
